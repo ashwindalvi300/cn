@@ -1,7 +1,5 @@
 -----------------Q.5-----------------------
-
 ----------TCPServer--------
-
 import java.io.*;
 import java.net.*;
 
@@ -32,9 +30,7 @@ class TCPServer {
         }
     }
 }
-
 ---------TCPClient-------------
-
 import java.io.*;
 import java.net.*;
 class TCPClient {
@@ -65,12 +61,8 @@ class TCPClient {
         clientSocket.close();
     }
 }
-
-
 -------------Q.6,20-------------------------
-
 -------UDPServer-----------
-
 import java.io.*;
 import java.net.*;
  
@@ -104,10 +96,7 @@ class UDPServer
                }
       }
 }
-
-
 -----------UDPClient-----------------
-
 import java.io.*;
 import java.net.*;
  
@@ -143,13 +132,8 @@ class UDPClient
       clientSocket.close();
    }
 }
-
-
-
 ------------------Q.7,18------------------------
-
 ---------ServerCode--------
-
 import java.io.*;
 import java.net.*;
 
@@ -191,10 +175,7 @@ public static void main(String arg[])
     new ServerCode();
 }
 }
-
-
 -------ClientCode--------
-
 import java.io.*;
 import java.net.*;
 
@@ -233,12 +214,8 @@ public static void main(String arg[])
     new ClientCode();
 }
 }
-
-
 ---------------Q.8-------------
-
 -------FileServer---------
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -250,19 +227,19 @@ public class FileServer
 { 
  public static void main(String[] args) throws Exception 
 {
- //Initialize Sockets
+
  ServerSocket ssock = new ServerSocket(1234);
  Socket socket = ssock.accept();
- //The InetAddress specification
+
  InetAddress IA = InetAddress.getByName("localhost"); 
  
- //Specify the file
+ 
  File file = new File("D:\\T.E\\responses.txt");
  FileInputStream fis = new FileInputStream(file);
  BufferedInputStream bis = new BufferedInputStream(fis); 
- //Get socket's output stream
+
  OutputStream os = socket.getOutputStream();
- //Read File Contents into contents array 
+
  byte[] contents;
  long fileLength = file.length(); 
  long current = 0;
@@ -281,15 +258,12 @@ public class FileServer
  System.out.print("Sending file ... "+(current*100)/fileLength+"% complete!");
  } 
  os.flush(); 
- //File transfer done. Close the socket connection!
+
  socket.close();
  ssock.close();
  System.out.println("File sent succesfully!");
  } }
-
-
 ------FileClient----------
-
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -318,10 +292,7 @@ public class FileClient {
         }
     }
 }
-
-
 ---------Q.9---------
-
 ----UDPSfile----
 import java.io.File;
 import java.io.PrintWriter;
@@ -340,10 +311,6 @@ public class UDPSfile {
 		byte[]filename=new byte[1000];
 		byte[]b=new byte[10000000];
 
-
-
-		//receiving name
-
 		DatagramPacket name=new DatagramPacket(filename,filename.length);
 		s.receive(name);
 		System.out.print("hello");
@@ -355,12 +322,6 @@ public class UDPSfile {
 		System.out.print("hello");
 		System.out.println(new String(p.getData()));
 		
-		
-		//String rec="Received your packet";
-		//byte[] b1=rec.getBytes();
-		//System.out.println(b1);
-		//DatagramPacket p1=new DatagramPacket(b1,b1.length,ia,p.getPort());
-		//s.send(p1);
 		
 		String fname=new String(name.getData()).trim();
 		fname="C://java_prog//"+fname;
@@ -375,8 +336,6 @@ public class UDPSfile {
 		pw.close();
 			}
 }
-
-
 ------UDPCfile--------
 import java.io.BufferedReader;
 import java.io.File;
@@ -390,7 +349,6 @@ import java.util.Scanner;
 public class UDPCfile {
 
 	public static void main(String[] args)throws Exception {
-		// TODO Auto-generated method stub
 		Scanner sc=new Scanner(System.in);
 		DatagramSocket s=new DatagramSocket();
 		InetAddress ia=InetAddress.getLocalHost();
@@ -453,8 +411,7 @@ public class UDPCfile {
 	}
 
 }
- 
--------------Q.14-------------
+ -------------Q.14-------------
 -----IPDemo-----
 import java.net.*;
 import java.util.*;
@@ -500,8 +457,6 @@ public class IPDemo
   
  }
 }
-
-
 ----------Q.3,15-----------
 a=input("enter any IP address: ")
 l=list(a.split('.'))
@@ -532,7 +487,5 @@ if op==True:
     check_class(b,l) 
 else:
     print("ip address is invalid")
-
-
 --------------Q.4------------
 
