@@ -1,6 +1,8 @@
---TCPServer
+-----------------Q.5-----------------------
 
-  import java.io.*;
+----------TCPServer--------
+
+import java.io.*;
 import java.net.*;
 
 class TCPServer {
@@ -31,9 +33,9 @@ class TCPServer {
     }
 }
 
---TCPClient
+---------TCPClient-------------
 
-  import java.io.*;
+import java.io.*;
 import java.net.*;
 class TCPClient {
 
@@ -60,8 +62,266 @@ class TCPClient {
         modifiedSentence = inFromServer.readLine();
 
         System.out.println("FROM SERVER: " + modifiedSentence);
-
         clientSocket.close();
- 
     }
 }
+
+
+-------------Q.6-------------------------
+
+-------UPDServer-----------
+
+import java.io.*;
+import java.net.*;
+ 
+class UDPServer
+{
+   public static void main(String args[]) throws Exception
+      {
+         DatagramSocket serverSocket = new DatagramSocket(9876);
+  //Server Socekt Created
+ 
+            byte[] receiveData = new byte[1024];
+            byte[] sendData = new byte[1024];
+            while(true)
+               {
+                  DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                  serverSocket.receive(receivePacket);
+                  String sentence = new String( receivePacket.getData());
+                  System.out.println("RECEIVED: " + sentence);
+ 
+                  InetAddress IPAddress = receivePacket.getAddress();
+                  int port = receivePacket.getPort();
+ 
+                  String capitalizedSentence = sentence.toUpperCase();
+   //Change sentence to Capital letter
+                  sendData = capitalizedSentence.getBytes();
+ 
+                  DatagramPacket sendPacket =
+                  new DatagramPacket(sendData, sendData.length, IPAddress, port);
+                  serverSocket.send(sendPacket);
+   //Send Capitalized data back to client
+               }
+      }
+}
+
+
+-----------UDPClient-----------------
+
+import java.io.*;
+import java.net.*;
+ 
+class UDPClient
+{
+   public static void main(String args[]) throws Exception
+   {
+      BufferedReader inFromUser =
+         new BufferedReader(new InputStreamReader(System.in));
+ 
+      DatagramSocket clientSocket = new DatagramSocket();
+ //Client Socket is created
+ 
+      InetAddress IPAddress = InetAddress.getByName("localhost");
+ //Gets the IP Address 
+ 
+      byte[] sendData = new byte[1024];
+      byte[] receiveData = new byte[1024];
+     System.out.print("Enter Message for server:");
+      String sentence = inFromUser.readLine();
+ 
+      sendData = sentence.getBytes();
+ //sends data
+ 
+      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+      clientSocket.send(sendPacket);
+ 
+      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+      clientSocket.receive(receivePacket);
+ 
+      String modifiedSentence = new String(receivePacket.getData());
+      System.out.println("FROM SERVER:" + modifiedSentence);
+      clientSocket.close();
+   }
+}
+
+
+
+------------------Q.7------------------------
+
+---------ServerCode--------
+
+import java.io.*;
+import java.net.*;
+
+public class ServerCode
+{
+ServerSocket ss;
+Socket socket;
+BufferedReader sock_in,kdb_in;
+PrintWriter sock_out;
+String str;
+    public ServerCode()
+    {
+    try{
+        ss=new ServerSocket(8080);
+        System.out.println("Server is listening port 8080");
+        socket=ss.accept();
+        System.out.println("Connection established...");
+        kdb_in=new BufferedReader(new InputStreamReader(System.in));
+        sock_in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        sock_out=new PrintWriter(socket.getOutputStream());
+        while(true)
+        {
+        System.out.println("Msg from client");
+        str=sock_in.readLine();
+
+        System.out.println(str);
+   
+        System.out.println("Enter the msg");
+        str=kdb_in.readLine();
+        sock_out.println(str);
+        sock_out.flush();
+        if(str.equals("bye"))
+        break;
+        }
+    }catch (Exception e) { }
+    }
+public static void main(String arg[])
+{
+    new ServerCode();
+}
+}
+
+
+-------ClientCode--------
+
+import java.io.*;
+import java.net.*;
+
+public class ClientCode
+{
+Socket socket;
+BufferedReader sock_in,kdb_in;
+PrintWriter sock_out;
+String str;
+    public ClientCode()
+    {
+    try{
+
+        Socket socket=new Socket("192.168.1.3",8080);
+        kdb_in=new BufferedReader(new InputStreamReader(System.in));
+        sock_in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        sock_out=new PrintWriter(socket.getOutputStream());
+        while(true)
+        {
+     
+        System.out.println("Enter the msg");
+        str=kdb_in.readLine();
+        sock_out.println(str);
+        sock_out.flush();
+        System.out.println("Msg from Server");
+        str=sock_in.readLine();
+        System.out.println(str);
+        if(str.equals("bye"))
+        break;
+        }
+        //socket.close();
+    }catch (Exception e) { }
+    }
+public static void main(String arg[])
+{
+    new ClientCode();
+}
+}
+
+
+---------------Q.8-------------
+
+-------FileServer---------
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+public class FileServer 
+{ 
+ public static void main(String[] args) throws Exception 
+{
+ //Initialize Sockets
+ ServerSocket ssock = new ServerSocket(1234);
+ Socket socket = ssock.accept();
+ //The InetAddress specification
+ InetAddress IA = InetAddress.getByName("localhost"); 
+ 
+ //Specify the file
+ File file = new File("D:\\T.E\\responses.txt");
+ FileInputStream fis = new FileInputStream(file);
+ BufferedInputStream bis = new BufferedInputStream(fis); 
+ //Get socket's output stream
+ OutputStream os = socket.getOutputStream();
+ //Read File Contents into contents array 
+ byte[] contents;
+ long fileLength = file.length(); 
+ long current = 0;
+ long start = System.nanoTime();
+ while(current!=fileLength){ 
+ int size = 10000;
+ if(fileLength - current >= size)
+ current += size; 
+ else{ 
+ size = (int)(fileLength - current); 
+ current = fileLength;
+ } 
+ contents = new byte[size]; 
+ bis.read(contents, 0, size); 
+ os.write(contents);
+ System.out.print("Sending file ... "+(current*100)/fileLength+"% complete!");
+ } 
+ os.flush(); 
+ //File transfer done. Close the socket connection!
+ socket.close();
+ ssock.close();
+ System.out.println("File sent succesfully!");
+ } }
+
+
+------FileClient----------
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+
+public class FileClient {
+    public static void main(String[] args) {
+        try {
+            Socket socket = new Socket(InetAddress.getByName("localhost"), 1234);
+            byte[] contents = new byte[10000];
+            FileOutputStream fos = new FileOutputStream("d:\\Bookmarks1.txt");
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            InputStream is = socket.getInputStream();
+
+            int bytesRead;
+            while ((bytesRead = is.read(contents)) != -1) {
+                bos.write(contents, 0, bytesRead);
+            }
+
+            bos.flush();
+            socket.close();
+            System.out.println("File saved successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+---------Q.
+
+        
+ 
+    
